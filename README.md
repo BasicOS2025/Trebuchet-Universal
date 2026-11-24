@@ -7,9 +7,7 @@ Android 11 and newer.
 
 This project combines the stable LineageOS 18.1 launcher implementation with
 the compatible surface and folder palette from the LineageOS 22.2 UI. Features
-that require privileged ROM integration, including Quickstep/Recents, are kept
-outside the standalone APK.
-
+that require privileged ROM integration, including Quickstep/Recents.
 ## Compatibility
 
 - Minimum Android version: Android 11 (API 30)
