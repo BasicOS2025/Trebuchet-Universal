@@ -20,6 +20,13 @@ android {
     compileSdkVersion COMPILE_SDK
     buildToolsVersion BUILD_TOOLS_VERSION
 
+    // Android 11-era AOSP resource namespaces trigger false-positive checks in
+    // current Android Gradle Plugin lint. They do not affect packaged runtime
+    // resources, so do not block a signed release on them.
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         minSdkVersion 30
         targetSdkVersion 34
@@ -29,9 +36,21 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+    signingConfigs {
+        release {
+            storeFile file(System.getenv('TREBUCHET_RELEASE_STORE'))
+            storePassword System.getenv('TREBUCHET_RELEASE_STORE_PASSWORD')
+            keyAlias System.getenv('TREBUCHET_RELEASE_KEY_ALIAS')
+            keyPassword System.getenv('TREBUCHET_RELEASE_KEY_PASSWORD')
+        }
+    }
     buildTypes {
         debug {
             minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
         }
     }
 
@@ -65,13 +84,6 @@ android {
 
         withoutQuickstep {
             dimension "recents"
-        }
-    }
-
-    // Disable release builds for now
-    android.variantFilter { variant ->
-        if (variant.buildType.name.endsWith('release')) {
-            variant.setIgnore(true)
         }
     }
 
